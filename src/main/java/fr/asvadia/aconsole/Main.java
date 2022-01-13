@@ -11,6 +11,7 @@ import java.io.IOException;
 public class Main extends JavaPlugin {
     private static Main instance;
 
+
     @Override
     public void onLoad() {
         instance = this;

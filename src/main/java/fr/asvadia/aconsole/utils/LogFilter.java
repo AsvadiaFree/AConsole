@@ -23,11 +23,14 @@ public class LogFilter implements Filter {
     }
 
     public Filter.Result checkMessages(int level, String message) {
-        if (message == null
-                || (level > 3 && hideMessages.contains(message.toLowerCase()))
-                || (forceHideMessages.contains(message.toLowerCase())))
-            return Result.DENY;
-        return null;
+        if (level >= 400)
+            for (String s : hideMessages)
+                if (message.contains(s))
+                    return Result.DENY;
+        for (String s : forceHideMessages)
+            if (message.contains(s))
+                return Result.DENY;
+        return Result.NEUTRAL;
     }
 
     @Override
@@ -107,7 +110,7 @@ public class LogFilter implements Filter {
 
     @Override
     public Result filter(LogEvent event) {
-        return checkMessages(event.getLevel().intLevel(), event.getMessage().getFormattedMessage());
+        return checkMessages(event.getLevel().intLevel(), event.getLoggerName() + " " + event.getMessage().getFormattedMessage());
     }
 
     @Override
